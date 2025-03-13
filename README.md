@@ -1,4 +1,4 @@
-# scout
+# `scout`
 
 
 <p align="center">
