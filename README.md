@@ -1,12 +1,13 @@
-# `scout`
+# ``scout``
 
 
 <p align="center">
-  <img src="https://github.com/fsorrenti/scout/blob/main/assets/img/scout.jpg" width="32%"
+  <img src="https://github.com/fsorrenti/scout/blob/main/assets/img/scout.jpg" width="52%"
  alt="veloce_logo"/>
 </p>
 
-
+![](https://img.shields.io/badge/Python)
+![](https://img.shields.io/badge/Author-Davide%20Piras%20-181717?style=plastic)
 
 Hello! Welcome to scout (Supernova Cosmology Utilities)
 
