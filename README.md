@@ -7,8 +7,10 @@
 </p>
 
 <div align="center">
+  
 ![](https://img.shields.io/badge/Python-181717?style=plastic&logo=python)
 ![](https://img.shields.io/badge/Author-Francesco%20Sorrenti%20-181717?style=plastic)
+
 </div>
 
 
