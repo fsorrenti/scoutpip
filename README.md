@@ -26,4 +26,11 @@ Examples can be found in [notebooks](https://github.com/fsorrenti/scout/blob/mai
 
 Feel free to [fork](https://github.com/fsorrenti/scout/fork) this repository to work on it; otherwise, please [raise an issue](https://github.com/fsorrenti/scout/issues) or contact [Francesco Sorrenti](mailto:francescosorrenti96@gmail.com).
 
-## Citation
+## License
+
+`scout` is released under the GPL-3 license (see [LICENSE](https://github.com/fsorrenti/scout/blob/main/LICENSE.txt)) subject to the non-commercial use condition.
+
+     scout
+     Copyright (C) 2025 Francesco Sorrenti & contributors
+
+     This program is released under the GPL-3 license (see LICENSE.txt), subject to a non-commercial use condition.
