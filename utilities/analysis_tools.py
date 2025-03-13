@@ -27,7 +27,7 @@ def flatchain(name_file):
 
 def flatchain_quadrupole(name_chain):
         #load the chain considering all the supernovae
-    flatchain_monopole_bulk_quadrupole=at.flatchain(name_chain)
+    flatchain_monopole_bulk_quadrupole=flatchain(name_chain)
 
     flatchain_monopole_bulk_quadrupole[:,3]=np.rad2deg(np.arccos(flatchain_monopole_bulk_quadrupole[:,3]))-90 
 
@@ -47,7 +47,7 @@ def flatchain_quadrupole(name_chain):
 
     # Vectorized eigenvalue calculation for each 3x3 matrix in matrix1_reshaped
     eigenvalues_and_vectors_list = [
-        at.find_eigenvalues_eigenvectors(mat) for mat in matrix1_reshaped
+        find_eigenvalues_eigenvectors(mat) for mat in matrix1_reshaped
     ]
 
     # Unpack eigenvalues 
