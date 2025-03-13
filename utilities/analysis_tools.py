@@ -25,6 +25,44 @@ def flatchain(name_file):
     burnin = int(2 * np.max(tau))
     return reader.get_chain(flat=True, discard=burnin)
 
+def flatchain_quadrupole(name_chain):
+        #load the chain considering all the supernovae
+    flatchain_monopole_bulk_quadrupole=at.flatchain(name_chain)
+
+    flatchain_monopole_bulk_quadrupole[:,3]=np.rad2deg(np.arccos(flatchain_monopole_bulk_quadrupole[:,3]))-90 
+
+
+    # Computing the symmetric traceless matrix using custom function ut.symmetric_traceless_matrix
+    matrix1 = ut.symmetric_traceless_matrix(
+        flatchain_monopole_bulk_quadrupole[:, 4],
+        flatchain_monopole_bulk_quadrupole[:, 5],
+        flatchain_monopole_bulk_quadrupole[:, 6],
+        flatchain_monopole_bulk_quadrupole[:, 7],
+        flatchain_monopole_bulk_quadrupole[:, 8],
+    )
+
+
+    # Reshaping the array to (277568, 3, 3) for efficient vectorized operations
+    matrix1_reshaped = matrix1.transpose(2, 0, 1)
+
+    # Vectorized eigenvalue calculation for each 3x3 matrix in matrix1_reshaped
+    eigenvalues_and_vectors_list = [
+        at.find_eigenvalues_eigenvectors(mat) for mat in matrix1_reshaped
+    ]
+
+    # Unpack eigenvalues 
+    eigenvalues_list = [eig_and_vec[0] for eig_and_vec in eigenvalues_and_vectors_list]
+
+
+    # Combine selected columns from flatchain_quadrupole and eigenvalues_list
+    flatchain_monopole_bulk_quadrupole_with_eigenvalues = np.hstack(
+        (flatchain_monopole_bulk_quadrupole[:, [0, 1, 2,3, 9, 10, 11]], eigenvalues_list)
+    )
+
+    return flatchain_monopole_bulk_quadrupole_with_eigenvalues
+
+    
+
 
 """plotting feauture"""
 
