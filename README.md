@@ -15,7 +15,7 @@
 
 
 
-Hello! Welcome to scout (Supernova Cosmology Utilities)
+Hello! Welcome to `scout` (Supernova Cosmology Utilities)! This repositories provide all the codes necessary for computing the multipoles of the SNe luminosity distance and  reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002,  together with analyses tools. 
 
 
 ## Example
