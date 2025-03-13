@@ -122,6 +122,10 @@ def difference_vector_by_hand_uncertainties(v1, ra1, dec1, v2, ra2, dec2):
     return v, ra, dec
 
 
+
+"""filter dataset functions"""
+
+
 def chisq_filtered(
     dataset,
     inversed_covariance,
@@ -271,6 +275,7 @@ def chisq_filtered_monopole(
 
 
 def symmetric_traceless_matrix(a11, a12, a13, a22, a23):
+    """How to construct the symmetric traceless matrix from the individual matrix elements"""
     return np.array([[a11, a12, a13], [a12, a22, a23], [a13, a23, -(a11 + a22)]])
 
 
