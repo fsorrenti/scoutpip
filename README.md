@@ -13,7 +13,7 @@ Hello! Welcome to scout (Supernova Cosmology Utilities)
 
 ## Example
 
-Under construction.
+Examples can be found in [notebooks](https://github.com/fsorrenti/scout/blob/main/notebooks). 
 
 ## Contributing and contacts
 
