@@ -1,0 +1,8 @@
+__pycache__
+
+.ipynb_checkpoints
+
+# Ignor local configuration file
+.env
+.vscode/
+.idea/
