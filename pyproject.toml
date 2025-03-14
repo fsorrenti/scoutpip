@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "scout"
+version = "0.1.1"
+description = "Codes necessary for computing the multipoles of the SNe luminosity distance and reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002"
+authors = ["Artyom Vorobyov <artyom.vorobyov@gmail.com>"]
+license = "GPL-3"
+readme = "README.md"
+repository = "https://github.com/fsorrenti/scout"
+keywords = ["SNe cosmology", "data analysis"]
+classifiers = [
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",]
+
+[tool.poetry.dependencies]
+python = "~3.10"
+scipy
+getdist
+emcee
+numpy
+astropy
+math
+cmath
+matplotlib
+
+pytest = ">= 7.4.0"
+
+[build-system]
+requires = [
+    "poetry-core"
+]
+build-backend = "poetry.core.masonry.api"
