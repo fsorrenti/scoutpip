@@ -10,12 +10,7 @@ from astropy import coordinates
 #import dipole_utilities as ut
 from scipy.linalg import eigh
 
-import sys
-import os
-
-sys.path.append(os.path.abspath("./.."))
-
-from utilities import dipole_utilities as ut
+from scoutpy import dipole_utilities as ut
 
 
 def flatchain(name_file):

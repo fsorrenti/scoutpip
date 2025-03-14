@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "scout"
+name = "scoutpy"
 version = "0.1.1"
 description = "Codes necessary for computing the multipoles of the SNe luminosity distance and reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002"
 authors = ["Artyom Vorobyov <artyom.vorobyov@gmail.com>"]
@@ -14,16 +14,12 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "~3.10"
-scipy
-getdist
-emcee
-numpy
-astropy
-math
-cmath
-matplotlib
-
-pytest = ">= 7.4.0"
+scipy = "~1.11.4"
+getdist = "~1.5.2"
+emcee = "~3.1.2"
+numpy = "~1.24.3"
+astropy = "~5.3.4"
+matplotlib = "~3.8.0"
 
 [build-system]
 requires = [

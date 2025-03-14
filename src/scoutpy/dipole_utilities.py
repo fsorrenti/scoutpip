@@ -5,6 +5,7 @@ import math as m
 from scipy import integrate, special
 from astropy import coordinates
 
+
 """
 Firstly all the geometrical/positional stuff
 """
@@ -96,32 +97,43 @@ def difference_vector_by_hand(v1, ra1, dec1, v2, ra2, dec2):
     dec1 = np.deg2rad(dec1)
     dec2 = np.deg2rad(dec2)
 
-    x = v1 * m.cos(dec1) * m.cos(ra1) - v2 * m.cos(dec2) * m.cos(ra2)
-    y = v1 * m.cos(dec1) * m.sin(ra1) - v2 * m.cos(dec2) * m.sin(ra2)
-    z = v1 * m.sin(dec1) - v2 * m.sin(dec2)
+    x = v1 * np.cos(dec1) * np.cos(ra1) - v2 * np.cos(dec2) * np.cos(ra2)
+    y = v1 * np.cos(dec1) * np.sin(ra1) - v2 * np.cos(dec2) * np.sin(ra2)
+    z = v1 * np.sin(dec1) - v2 * np.sin(dec2)
 
-    v = m.sqrt(x**2 + y**2 + z**2)
-    ra = np.rad2deg(m.atan(y / x)) + 180
-    dec = np.rad2deg(m.asin(z / v))
+    v = np.sqrt(x**2 + y**2 + z**2)
+    ra = np.rad2deg(np.arctan(y / x)) + 180
+    dec = np.rad2deg(np.arcsin(z / v))
     return v, ra, dec
 
 
-def difference_vector_by_hand_uncertainties(v1, ra1, dec1, v2, ra2, dec2):
-    ra1 = um.radians(ra1)
-    ra2 = um.radians(ra2)
-    dec1 = um.radians(dec1)
-    dec2 = um.radians(dec2)
+#import uncertainties.umath as um
+#from uncertainties import ufloat
 
-    x = v1 * um.cos(dec1) * um.cos(ra1) - v2 * um.cos(dec2) * um.cos(ra2)
-    y = v1 * um.cos(dec1) * um.sin(ra1) - v2 * um.cos(dec2) * um.sin(ra2)
-    z = v1 * um.sin(dec1) - v2 * um.sin(dec2)
+'''
+def difference_vector_by_hand_uncertainties(v1, errorv1, ra1, errorra1, dec1, errordec1, v2, errorv2, ra2, errorra2, dec2, errordec2,):
+    v1_with_error=ufloat(v1, errorv1)
+    ra1_with_error=ufloat(ra1, errorra1)
+    dec1_with_error=ufloat(dec1, errordec1)
+    v2_with_error=ufloat(v2, errorv2)
+    ra2_with_error=ufloat(ra2, errorra2)
+    dec2_with_error=ufloat(dec2, errordec2)
+
+
+    ra1_with_error_rad = um.radians(ra1_with_error)
+    ra2_with_error_rad = um.radians(ra2_with_error)
+    dec1_with_error_rad = um.radians(dec1_with_error)
+    dec2_with_error_rad = um.radians(dec2_with_error)
+
+    x = v1_with_error * um.cos(dec1_with_error_rad) * um.cos(ra1_with_error_rad) - v2_with_error * um.cos(dec2_with_error_rad) * um.cos(ra2_with_error_rad)
+    y = v1_with_error * um.cos(dec1_with_error_rad) * um.sin(ra1_with_error_rad) - v2_with_error * um.cos(dec2_with_error_rad) * um.sin(ra2_with_error_rad)
+    z = v1_with_error * um.sin(dec1_with_error_rad) - v2_with_error * um.sin(dec2_with_error_rad)
 
     v = um.sqrt(x**2 + y**2 + z**2)
-    ra = um.degrees(um.atan(y / x)) + 180
+    ra = um.degrees(um.atan2(y , x)) + 180
     dec = um.degrees(um.asin(z / v))
     return v, ra, dec
-
-
+'''
 
 """filter dataset functions"""
 
