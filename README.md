@@ -18,6 +18,14 @@
 
 Hello! Welcome to `scoutpip` (Supernova Cosmology Utilities)! This repositories provide all the codes necessary for computing the multipoles of the SNe luminosity distance and  reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002,  together with analyses tools. 
 
+## Installation
+
+To install `scoutpip`, follow these steps:
+1. (optional) `conda create -n scoutpip python=3.10 jupyter` (create a custom `conda` environment with python 3.10) 
+2. (optional) `conda activate scoutpip` (activate it)
+3. Install `scoutpip`:
+
+        pip install scoutpip
 
 ## Example
 
