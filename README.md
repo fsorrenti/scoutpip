@@ -2,8 +2,9 @@
 
 
 <p align="center">
-  <img src="https://github.com/fsorrenti/scout/blob/main/assets/img/scout.jpg" width="52%"
- alt="veloce_logo"/>
+  <img src="https://raw.githubusercontent.com/fsorrenti/scout/main/assets/img/scout.jpg"
+   width="52%"
+ alt="scoutpip_logo"/>
 </p>
 
 <div align="center">

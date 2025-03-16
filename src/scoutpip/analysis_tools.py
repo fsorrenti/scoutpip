@@ -7,10 +7,9 @@ import numpy as np
 from getdist import plots, MCSamples
 import cmath
 from astropy import coordinates
-#import dipole_utilities as ut
 from scipy.linalg import eigh
 
-from scoutpy import dipole_utilities as ut
+from scoutpip import dipole_utilities as ut
 
 
 def flatchain(name_file):
