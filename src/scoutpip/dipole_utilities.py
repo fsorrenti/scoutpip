@@ -341,6 +341,7 @@ We now define the filter functions to apply to the dataset
 """
 
 def filter(data_file, inverted_covariance_matrix, boolean_filter):
+    """General filter to dataset and covariance"""    
     # I prepare the file for writing the inverse covariance
     number_of_elements = len(data_file)
     filtered_file = list()
@@ -351,9 +352,6 @@ def filter(data_file, inverted_covariance_matrix, boolean_filter):
             continue
         else:
             filtered_file.append(data_file[i])
-
-    """You cannot delete multiple dimensions (such as rows and columns) at once with np.delete(). 
-    If you want to delete different dimensions, repeat np.delete()"""
 
     filtered_covariance_matrix = np.delete(
         np.delete(inverted_covariance_matrix, elements_to_skip, 0), elements_to_skip, 1
@@ -371,6 +369,7 @@ def filter_z(
     down_limit_redshift,
     upper_limit_redshift,
 ):
+    """Redshift filter to dataset and covariance"""    
     # I prepare the file for writing the inverse covariance
     number_of_elements = len(data_file)
     filtered_file = list()
@@ -382,8 +381,7 @@ def filter_z(
         else:
             filtered_file.append(data_file[i])
 
-    """You cannot delete multiple dimensions (such as rows and columns) at once with np.delete(). 
-    If you want to delete different dimensions, repeat np.delete()"""
+
 
     filtered_covariance_matrix = np.delete(
         np.delete(inverted_covariance_matrix, elements_to_skip, 0), elements_to_skip, 1
@@ -402,7 +400,8 @@ def filter_z_removing_cepheid(
     down_limit_redshift,
     upper_limit_redshift,
 ):
-    """with this functin I filter keeping all the cepheid"""
+
+    """Redshift filter to dataset and covariance, removing all cepheids"""    
 
     # I prepare the file for writing the inverse covariance
     number_of_elements = len(data_file)
@@ -418,9 +417,6 @@ def filter_z_removing_cepheid(
             continue
         else:
             filtered_file.append(data_file[i])
-
-    """You cannot delete multiple dimensions (such as rows and columns) at once with np.delete(). 
-    If you want to delete different dimensions, repeat np.delete()"""
 
     filtered_covariance_matrix = np.delete(
         np.delete(inverted_covariance_matrix, elements_to_skip, 0), elements_to_skip, 1
@@ -439,6 +435,7 @@ def filter_z_cepheid(
     down_limit_redshift,
     upper_limit_redshift,
 ):
+    """Redshift filter to dataset and covariance, keeping all cepheids"""    
     # I prepare the file for writing the inverse covariance
     number_of_elements = len(data_file)
     filtered_file = list()
@@ -452,9 +449,6 @@ def filter_z_cepheid(
         else:
             filtered_file.append(data_file[i])
 
-    """You cannot delete multiple dimensions (such as rows and columns) at once with np.delete(). 
-    If you want to delete different dimensions, repeat np.delete()"""
-
     filtered_covariance_matrix = np.delete(
         np.delete(inverted_covariance_matrix, elements_to_skip, 0), elements_to_skip, 1
     )
@@ -466,9 +460,6 @@ def filter_z_cepheid(
 
 
 def exp_obs_z_quadrupole_corrected_no_M(
-    v_bulk,
-    ra_bulk,
-    dec_bulk,
     a11,
     a12,
     a13,
@@ -489,11 +480,11 @@ def exp_obs_z_quadrupole_corrected_no_M(
 
     for i in range(0, number_of_elements):
         exp_obs_mon[i] = mu[i] - monopole(
-            z_quadrupole(
+            z_quadrupole_bulk(
                 z[i],
-                v_bulk,
-                ra_bulk,
-                dec_bulk,
+                0,
+                0,
+                0,
                 H0,
                 Omat,
                 alpha_matrix,
@@ -512,9 +503,6 @@ def exp_obs_z_quadrupole_corrected_no_M(
 
 
 def exp_obs_z_quadrupole_corrected(
-    v_bulk,
-    ra_bulk,
-    dec_bulk,
     a11,
     a12,
     a13,
@@ -542,11 +530,11 @@ def exp_obs_z_quadrupole_corrected(
     if horstmann:
         for i in range(0, number_of_elements):
             exp_obs_mon[i] = mu[i] - monopole(
-                z_quadrupole(
+                z_quadrupole_bulk(
                     z[i],
-                    v_bulk,
-                    ra_bulk,
-                    dec_bulk,
+                    0,
+                    0,
+                    0,
                     H0,
                     Omat,
                     alpha_matrix,
@@ -563,11 +551,11 @@ def exp_obs_z_quadrupole_corrected(
         if no_cepheid:
             for i in range(0, number_of_elements):
                 exp_obs_mon[i] = mu[i] - monopole(
-                    z_quadrupole(
+                    z_quadrupole_bulk(
                         z[i],
-                        v_bulk,
-                        ra_bulk,
-                        dec_bulk,
+                        0,
+                        0,
+                        0,
                         H0,
                         Omat,
                         alpha_matrix,
@@ -592,11 +580,11 @@ def exp_obs_z_quadrupole_corrected(
                         mu[i]
                         + M
                         - monopole(
-                            z_quadrupole(
+                            z_quadrupole_bulk(
                                 z[i],
-                                v_bulk,
-                                ra_bulk,
-                                dec_bulk,
+                                0,
+                                0,
+                                0,
                                 H0,
                                 Omat,
                                 alpha_matrix,
@@ -895,7 +883,7 @@ def exp_obs_z_dipole_corrected(
         if no_cepheid:
             for i in range(0, number_of_elements):
                 exp_obs_mon[i] = mu[i] - monopole(
-                    z_dipole(
+                    z_sun(
                         z[i], velocity, ra_sun_in_deg, dec_sun_in_deg, ra[i], dec[i]
                     ),
                     H0,
@@ -913,7 +901,7 @@ def exp_obs_z_dipole_corrected(
                         mu[i]
                         + M
                         - monopole(
-                            z_dipole(
+                            z_sun(
                                 z[i],
                                 velocity,
                                 ra_sun_in_deg,
