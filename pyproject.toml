@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scoutpip"
-version = "0.1.4"
+version = "0.1.5"
 description = "Codes necessary for computing the multipoles of the SNe luminosity distance and reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002"
 authors = ["Artyom Vorobyov <artyom.vorobyov@gmail.com>"]
 license = "GPL-3"
