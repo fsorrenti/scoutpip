@@ -20,6 +20,7 @@ def flatchain(name_file):
     return reader.get_chain(flat=True, discard=burnin)
 
 def flatchain_quadrupole(name_chain):
+    """how to get the flatchain including monopole, bulk and quadrupole corrections"""
         #load the chain considering all the supernovae
     flatchain_monopole_bulk_quadrupole=flatchain(name_chain)
 
@@ -166,7 +167,7 @@ def plot_getdist(
 
 
 def contours_getdist(flatchain, names_parameter):
-    """this is for a standard flatchain (no list)"""
+    """this is for a standard flatchain to obtaine contours"""
 
     print(
         getdist.mcsamples.MCSamples(
@@ -183,7 +184,7 @@ def contours_getdist(flatchain, names_parameter):
 
 
 def find_eigenvalues_eigenvectors(matrix):
-    # Function to find eigenvalues of a symmetric matrix
+    """Function to find eigenvalues of a symmetric matrix"""
     eigenvalues, eigenvectors = eigh(matrix)
     return eigenvalues, eigenvectors
 
