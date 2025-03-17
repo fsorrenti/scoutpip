@@ -38,15 +38,15 @@ Feel free to [fork](https://github.com/fsorrenti/scoutpip/fork) this repository 
 ## Citation
 If you use `scoutpip`, please cite the corresponding paper:
 
-@artiicle{Sorrenti:2024ztg,
-    author = "Sorrenti, Francesco and Durrer, Ruth and Kunz, Martin",
-    title = "{The low multipoles in the Pantheon+SH0ES data}",
-    eprint = "2403.17741",
-    archivePrefix = "arXiv",
-    primaryClass = "astro-ph.CO",
-    month = "3",
-    year = "2024"
-}
+    @artiicle{Sorrenti:2024ztg,
+        author = "Sorrenti, Francesco and Durrer, Ruth and Kunz, Martin",
+        title = "{The low multipoles in the Pantheon+SH0ES data}",
+        eprint = "2403.17741",
+        archivePrefix = "arXiv",
+        primaryClass = "astro-ph.CO",
+        month = "3",
+        year = "2024"
+    }
 
 
 ## License
