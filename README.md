@@ -16,7 +16,7 @@
 
 
 
-Hello! Welcome to `scoutpip` (Supernova Cosmology Utilities)! This repositories provide all the codes necessary for computing the multipoles of the SNe luminosity distance and  reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002,  together with analyses tools. 
+Hello! Welcome to `scoutpip` (Supernova Cosmology Utilities pip-installable)! This repositories provide all the codes necessary for computing the multipoles of the SNe luminosity distance and  reproduce the results in https://arxiv.org/pdf/2212.10328, https://arxiv.org/pdf/2403.17741 and https://arxiv.org/pdf/2407.07002,  together with analyses tools. 
 
 ## Installation
 
@@ -34,6 +34,20 @@ Examples can be found in [notebooks](https://github.com/fsorrenti/scoutpip/blob/
 ## Contributing and contacts
 
 Feel free to [fork](https://github.com/fsorrenti/scoutpip/fork) this repository to work on it; otherwise, please [raise an issue](https://github.com/fsorrenti/scoutpip/issues) or contact [Francesco Sorrenti](mailto:francescosorrenti96@gmail.com).
+
+## Citation
+If you use `scoutpip`, please cite the corresponding paper:
+
+`@article{Sorrenti:2024ztg,
+    author = "Sorrenti, Francesco and Durrer, Ruth and Kunz, Martin",
+    title = "{The low multipoles in the Pantheon+SH0ES data}",
+    eprint = "2403.17741",
+    archivePrefix = "arXiv",
+    primaryClass = "astro-ph.CO",
+    month = "3",
+    year = "2024"
+}`
+
 
 ## License
 
