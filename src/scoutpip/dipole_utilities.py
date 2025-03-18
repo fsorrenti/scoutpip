@@ -49,13 +49,6 @@ def DD1(z, omegam0):
     return -D1z(z, omegam0) * fz(z, omegam0) / (1 + z)
 
 
-def prefactor_z(z, H0, Omat):
-    """
-    Prefactor of the peculiar velocity field (eq. 2.9 of https://arxiv.org/pdf/2403.17741 )
-    """
-    return (D1z(z, Omat) * fz(z, Omat) * Hz(z, H0, Omat)) / (
-        D1z(0, Omat) * fz(0, Omat) * Hz(0, H0, Omat) * (1 + z)
-    )
 
 
 def dl_monopole(z, H0, Omat):
@@ -74,46 +67,6 @@ def symmetric_traceless_matrix(a11, a12, a13, a22, a23):
     return np.array([[a11, a12, a13], [a12, a22, a23], [a13, a23, -(a11 + a22)]])
 
 
-def factor_scalar(ra_sun_in_deg, dec_sun_in_deg, ra, dec):
-    """
-    Scalar product
-    """
-    # for spherical-cartesian first latitude [-pi/2,pi/2] and then longitude [0, 2pi]
-    # I move to cartesian coordinate
-
-    sun_cartesian = spherical_to_cartesian(
-        1, np.deg2rad(dec_sun_in_deg), np.deg2rad(ra_sun_in_deg)
-    )
-
-    return np.dot(
-        sun_cartesian,
-        spherical_to_cartesian(
-            1,
-            np.deg2rad(dec),
-            np.deg2rad(ra),
-        ),
-    )
-
-
-def factor_scalar_matrix(matrix, ra_1_in_deg, dec_1_in_deg, ra_2_in_deg, dec_2_in_deg):
-    """
-    Product vector-matrix-vector
-    """
-
-    # for spherical-cartesian first latitude [-pi/2,pi/2] and then longitude [0, 2pi]
-    # I move to cartesian coordinate
-
-    cartesian_1 = spherical_to_cartesian(
-        1, np.deg2rad(dec_1_in_deg), np.deg2rad(ra_1_in_deg)
-    )
-
-    cartesian_2 = spherical_to_cartesian(
-        1, np.deg2rad(dec_2_in_deg), np.deg2rad(ra_2_in_deg)
-    )
-
-    return cartesian_1 @ matrix @ cartesian_2
-
-
 
 
 def monopole(z, H0, Omat):
@@ -128,14 +81,221 @@ I define in the following the functions for the redshift corrections
 """
 
 
-def z_sun(v, ra_sun_in_deg, dec_sun_in_deg, ra, dec):
+def z_monopole_bulk_quadrupole(
+    z: float,
+    beta: float,
+    v_bulk: float,
+    ra_bulk: float,
+    dec_bulk: float,
+    H0: float,
+    Omat: float,
+    alpha_matrix: list,
+    v: float,
+    ra_sun_in_deg: float,
+    dec_sun_in_deg: float,
+    ra: float,
+    dec: float,
+) -> float:
     """
-    CMB z correction
+    Computes the CMB-corrected redshift, accounting for peculiar velocities 
+    due to bulk motion, monopole, and quadrupole effects.
+
+    Parameters:
+    ----------
+    z : float
+        Observed redshift.
+    beta : float
+        Growth rate parameter.
+    v_bulk : float
+        Bulk velocity in km/s.
+    ra_bulk : float
+        Right ascension of bulk flow (degrees).
+    dec_bulk : float
+        Declination of bulk flow (degrees).
+    H0 : float
+        Hubble constant (km/s/Mpc).
+    Omat : float
+        Matter density parameter.
+    alpha_matrix : list
+        Quadrupole distortion matrix.
+    v : float
+        Sun's peculiar velocity (km/s).
+    ra_sun_in_deg : float
+        Right ascension of the Sun (degrees).
+    dec_sun_in_deg : float
+        Declination of the Sun (degrees).
+    ra : float
+        Right ascension of the galaxy (degrees).
+    dec : float
+        Declination of the galaxy (degrees).
+
+    Returns:
+    -------
+    float
+        The corrected redshift accounting for peculiar velocity components.
+
+    Notes:
+    -----
+    - Uses `z_cmb_cross` to compute CMB-frame redshift.
+    - Uses `z_pec_monopole_bulk_quadrupole` to model peculiar velocity corrections.
+    - Assumes a standard flat ΛCDM cosmology with given `H0` and `Omat`.
     """
-    # for dimensionale purpose I have to put 1/c
-    c = 299792.458
-    vsun = v * factor_scalar(ra_sun_in_deg, dec_sun_in_deg, ra, dec)
+    
+    return (
+        (1 + z_cmb_cross(z, v, ra_sun_in_deg, dec_sun_in_deg, ra, dec))
+        / (
+            1
+            + z_pec_monopole_bulk_quadrupole(
+                z, beta, v_bulk, ra_bulk, dec_bulk, H0, Omat, alpha_matrix, ra, dec
+            )
+        )
+    ) - 1
+
+
+def z_cmb_cross(z: float, v: float, ra_sun_in_deg: float, dec_sun_in_deg: float, ra: float, dec: float) -> float:
+    """
+    Computes the CMB corrected redshift.
+
+    Parameters:
+    ----------
+    z : float
+        Observed redshift
+    v : float
+        Sun's peculiar velocity in km/s
+    ra_sun_in_deg : float
+        Right ascension of the Sun (degrees)
+    dec_sun_in_deg : float
+        Declination of the Sun (degrees)
+    ra : float
+        Right ascension of the SNa (degrees)
+    dec : float
+        Declination of the SNa (degrees).
+
+    Returns:
+    -------
+    float
+        The redshift corrected for the motion of the Sun relative to the CMB.
+
+    Notes:
+    -----
+    - Uses `z_sun` to compute the Sun’s contribution to the observed redshift.
+    """
+    
+    return ((1 + z) / (1 + z_sun(v, ra_sun_in_deg, dec_sun_in_deg, ra, dec))) - 1
+
+
+def z_sun(v: float, ra_sun_in_deg: float, dec_sun_in_deg: float, ra: float, dec: float) -> float:
+    """
+    Computes the redshift shift due to the Sun's motion with respect to the CMB
+
+    Parameters:
+    ----------
+    v : float
+        Sun's peculiar velocity in km/s.
+    ra_sun_in_deg : float
+        Right ascension of the Sun (degrees).
+    dec_sun_in_deg : float
+        Declination of the Sun (degrees).
+    ra : float
+        Right ascension of the SNa (degrees).
+    dec : float
+        Declination of the Sna (degrees).
+
+    Returns:
+    -------
+    float
+        The redshift correction due to the Sun’s motion.
+    """
+    
+    c = 299792.458  # Speed of light in km/s
+    vsun = v * factor_scalar(ra_sun_in_deg, dec_sun_in_deg, ra, dec)  # Projected velocity
     return ((1 + (-vsun / c)) / (1 - (-vsun / c))) ** (1 / 2) - 1
+
+
+def z_pec_monopole_bulk_quadrupole(
+    z: float,
+    beta: float,
+    v_bulk: float,
+    ra_bulk: float,
+    dec_bulk: float,
+    H0: float,
+    Omat: float,
+    alpha_matrix: list,
+    ra: float,
+    dec: float,
+) -> float:
+    """
+    Computes the redshift correction due to peculiar velocities, including 
+    bulk flow, monopole, and quadrupole effects.
+
+    Parameters:
+    ----------
+    z : float
+        Observed redshift of the galaxy.
+    beta : float
+        Growth rate parameter related to structure formation.
+    v_bulk : float
+        Bulk velocity of the large-scale structure in km/s.
+    ra_bulk : float
+        Right ascension of the bulk flow (degrees).
+    dec_bulk : float
+        Declination of the bulk flow (degrees).
+    H0 : float
+        Hubble constant in km/s/Mpc.
+    Omat : float
+        Matter density parameter.
+    alpha_matrix : list
+        Quadrupole distortion matri
+    ra : float
+        Right ascension of the galaxy (degrees).
+    dec : float
+        Declination of the galaxy (degrees).
+
+    Returns:
+    -------
+    float
+        The redshift correction due to peculiar velocity components.
+
+    """
+
+    c = 299792.458  # Speed of light in km/s
+    scalar_bulk = factor_scalar(ra_bulk, dec_bulk, ra, dec)  # Bulk flow projection
+    scalar_bulk_matrix = factor_scalar_matrix(alpha_matrix, ra, dec, ra, dec)  # Quadrupole term
+    v_pec = prefactor_z(z, H0, Omat) * (beta + v_bulk * scalar_bulk + scalar_bulk_matrix)  # Total peculiar velocity
+
+    return (((1 + (v_pec / c))) / (1 - (v_pec / c))) ** (1 / 2) - 1  # Relativistic Doppler shift
+
+def prefactor_z(z: float, H0: float, Omat: float) -> float:
+    """
+    Computes the prefactor for the peculiar velocity field, as described in Equation 2.9 of 
+    https://arxiv.org/pdf/2403.17741.
+
+    Parameters:
+    ----------
+    z : float
+        Redshift at which the prefactor is evaluated.
+    H0 : float
+        Hubble constant in km/s/Mpc.
+    Omat : float
+        Matter density parameter.
+
+    Returns:
+    -------
+    float
+        The prefactor for the peculiar velocity field.
+
+    Notes:
+    -----
+    - `D1z(z, Omat)` is the linear growth factor at redshift `z`.
+    - `fz(z, Omat)` is the linear growth rate of structure.
+    - `Hz(z, H0, Omat)` is the Hubble parameter at redshift `z`.
+    """
+    
+    return (D1z(z, Omat) * fz(z, Omat) * Hz(z, H0, Omat)) / (
+        D1z(0, Omat) * fz(0, Omat) * Hz(0, H0, Omat) * (1 + z)
+    )
+
+
 
 
 def z_pec(
@@ -152,35 +312,90 @@ def z_pec(
     """
     Peculiar velocities (bulk only) z correction
     """
-    # for dimensional purpose I have to put 1/c
     c = 299792.458
     scalar_bulk = factor_scalar(ra_bulk, dec_bulk, ra, dec)
     scalar_bulk_matrix = factor_scalar_matrix(alpha_matrix, ra, dec, ra, dec)
     v_pec = prefactor_z(z, H0, Omat) * (v_bulk * scalar_bulk + scalar_bulk_matrix)
     return (((1 + (v_pec / c))) / (1 - (v_pec / c))) ** (1 / 2) - 1
 
-def z_pec_monopole_bulk_quadrupole(
-    z,
-    beta,
-    v_bulk,
-    ra_bulk,
-    dec_bulk,
-    H0,
-    Omat,
-    alpha_matrix,
-    ra,
-    dec,
-):
-    """
-    Peculiar velocities (bulk+monopole+quadrupole) z correction
-    """    
 
-    # for dimensional purpose I have to put 1/c
-    c = 299792.458
-    scalar_bulk = factor_scalar(ra_bulk, dec_bulk, ra, dec)
-    scalar_bulk_matrix = factor_scalar_matrix(alpha_matrix, ra, dec, ra, dec)
-    v_pec = prefactor_z(z, H0, Omat) * (beta + v_bulk * scalar_bulk + scalar_bulk_matrix)
-    return (((1 + (v_pec / c))) / (1 - (v_pec / c))) ** (1 / 2) - 1
+
+def factor_scalar(ra_sun_in_deg: float, dec_sun_in_deg: float, ra: float, dec: float) -> float:
+    """
+    Computes the scalar (dot) product between two unit vectors in spherical coordinates.
+
+    Parameters:
+    ----------
+    ra_sun_in_deg : float
+        Right ascension of the Sun in degrees.
+    dec_sun_in_deg : float
+        Declination of the Sun in degrees.
+    ra : float
+        Right ascension of the object in degrees.
+    dec : float
+        Declination of the object in degrees.
+
+    Returns:
+    -------
+    float
+        Scalar product (dot product) of the two unit vectors.
+
+"""
+    # Convert Sun's position from spherical to Cartesian coordinates
+    sun_cartesian = spherical_to_cartesian(
+        1, np.deg2rad(dec_sun_in_deg), np.deg2rad(ra_sun_in_deg)
+    )
+
+    # Convert target object's position to Cartesian coordinates and compute dot product
+    return np.dot(
+        sun_cartesian,
+        spherical_to_cartesian(1, np.deg2rad(dec), np.deg2rad(ra)),
+    )
+
+
+def factor_scalar_matrix(
+    matrix: np.ndarray,
+    ra_1_in_deg: float,
+    dec_1_in_deg: float,
+    ra_2_in_deg: float,
+    dec_2_in_deg: float,
+) -> float:
+    """
+    Computes the quadratic form of a vector-matrix-vector product in Cartesian coordinates.
+
+    Parameters:
+    ----------
+    matrix : np.ndarray
+        A 3x3 matrix 
+    ra_1_in_deg : float
+        Right ascension of the first vector in degrees.
+    dec_1_in_deg : float
+        Declination of the first vector in degrees.
+    ra_2_in_deg : float
+        Right ascension of the second vector in degrees.
+    dec_2_in_deg : float
+        Declination of the second vector in degrees.
+
+    Returns:
+    -------
+    float
+        Result of product.
+
+    """
+
+    # Convert vectors from spherical to Cartesian coordinates
+    cartesian_1 = spherical_to_cartesian(
+        1, np.deg2rad(dec_1_in_deg), np.deg2rad(ra_1_in_deg)
+    )
+
+    cartesian_2 = spherical_to_cartesian(
+        1, np.deg2rad(dec_2_in_deg), np.deg2rad(ra_2_in_deg)
+    )
+
+    # Compute quadratic form (dot product with matrix transformation)
+    return cartesian_1 @ matrix @ cartesian_2
+
+
 
 def z_pec_monopole_bulk(
     z,
@@ -196,7 +411,6 @@ def z_pec_monopole_bulk(
     """
     Peculiar velocities (bulk+monopole) z correction
     """   
-    # for dimensional purpose I have to put 1/c
     c = 299792.458
     scalar_bulk = factor_scalar(ra_bulk, dec_bulk, ra, dec)
     v_pec = prefactor_z(z, H0, Omat) * (beta+ v_bulk * scalar_bulk)
@@ -236,49 +450,6 @@ def z_monopole_bulk(
             )
         )
     ) - 1
-
-def z_monopole_bulk_quadrupole(
-    z,
-    beta,
-    v_bulk,
-    ra_bulk,
-    dec_bulk,
-    H0,
-    Omat,
-    alpha_matrix,
-    v,
-    ra_sun_in_deg,
-    dec_sun_in_deg,
-    ra,
-    dec,
-):
-    """
-    Peculiar velocities (bulk+monopole+quadrupole) and CMB corrected redshift
-    """   
-    return (
-        (1 + z_cmb_cross(z, v, ra_sun_in_deg, dec_sun_in_deg, ra, dec))
-        / (
-            1
-            + z_pec_monopole_bulk_quadrupole(
-                z,
-                beta,
-                v_bulk,
-                ra_bulk,
-                dec_bulk,
-                H0,
-                Omat,
-                alpha_matrix,
-                ra,
-                dec)
-        )
-    ) - 1
-
-
-def z_cmb_cross(z, v, ra_sun_in_deg, dec_sun_in_deg, ra, dec):
-    """
-    CMB corrected redshift
-    """   
-    return ((1 + z) / (1 + z_sun(v, ra_sun_in_deg, dec_sun_in_deg, ra, dec))) - 1
 
 
 def z_monopole_dipole_cross(
