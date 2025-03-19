@@ -166,9 +166,23 @@ def plot_getdist(
         plt.show()
 
 
-def contours_getdist(flatchain, names_parameter):
-    """this is for a standard flatchain to obtaine contours"""
+def contours_getdist(flatchain: np.ndarray, names_parameter: list) -> None:
+    """
+    Prints the LaTeX-formatted parameter table.
 
+    Parameters:
+    ----------
+    flatchain : np.ndarray
+        Rows represent samples and columns correspond to parameters
+    names_parameter : list
+        List of parameter names 
+
+    Returns:
+    -------
+    None
+        The function prints the parameter summary table 
+    """
+    
     print(
         getdist.mcsamples.MCSamples(
             samples=flatchain,
@@ -178,6 +192,7 @@ def contours_getdist(flatchain, names_parameter):
         .getTable(limit=1)
         .tableTex()
     )
+
 
 
 """let's define the tools for the eigenvalues"""
